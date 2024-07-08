@@ -13,23 +13,23 @@ async function index(pokemonApi: string = "https://pokeapi.co/api/v2/pokemon"): 
     // Elementos DOM
     let card = document.querySelector(".card-container") as HTMLDivElement;
     let linksPaginacion = document.querySelector(".links-paginacion") as HTMLElement;
-
+    const div = document.createElement("div") as HTMLDivElement;
+    const img = document.createElement('img') as HTMLImageElement;
     let fragment = document.createDocumentFragment() as DocumentFragment;
-
     let content = document.createElement('div') as HTMLDivElement;
-
+    
     try {
         setTimeout(() => {
-            // Mostrar página de carga
-            card.innerHTML = `
-                <div class="w-100 d-flex justify-content-center align-items-center">
-                    <img class="loader" src="../assets/svg/loader.svg" alt="Cargando...">
-                </div>
-            `;
+            div.classList.add("w-100", "d-flex", "justify-content-center", "align-items-center");
+            img.src = "../assets/svg/pokeball.svg";
+            img.alt = "Cargando..."
+            img.classList.add("loader");
+            div.appendChild(img);
+            card.appendChild(div);
         }, 1);
 
         // Obtener datos de la API
-        let response = await fetch(pokemonApi);
+        let response: Response = await fetch(pokemonApi);
 
         // Manejar errores de respuesta HTTP
         if (!response.ok) throw { status: response.status, statusText: response.statusText };
@@ -52,7 +52,7 @@ async function index(pokemonApi: string = "https://pokeapi.co/api/v2/pokemon"): 
                 const small = document.createElement('small') as HTMLElement;
                 
                 // Agregar datos al DOM
-                let res = await fetch(pokemon.url);
+                let res: Response = await fetch(pokemon.url);
                 if (!res.ok) throw { status: res.status, statusText: res.statusText };
 
                 let pokemonData: pokemons = await res.json();
@@ -88,13 +88,30 @@ async function index(pokemonApi: string = "https://pokeapi.co/api/v2/pokemon"): 
         }
         // Limpiar contenido anterior
         card.innerHTML = ""
-
+        
+        // Agregar nuevo contenido
         card.appendChild(fragment);
 
+         // Limpiar enlaces de paginación anteriores
+         linksPaginacion.innerHTML = "";
+
         // Mostrar enlaces de paginación
-        let prevLink:string = data.previous ? `<a class="text-secondary" href="${data.previous}">⬅︎</a>` : "";
-        let nextLink:string = data.next ? `<a class="text-secondary" href="${data.next}">➡︎</a>` : "";
-        linksPaginacion.innerHTML = prevLink + " " + nextLink;
+        
+        if(data.previous){
+            const prevLink = document.createElement("a") as HTMLAnchorElement;
+            prevLink.textContent = "⬅︎";
+            prevLink.href = data.previous;
+            prevLink.classList.add("text-secondary");
+            linksPaginacion.appendChild(prevLink);
+        }
+
+        if(data.next){
+            const nextLink = document.createElement("a") as HTMLAnchorElement;
+            nextLink.textContent = "➡︎";
+            nextLink.href = data.next;
+            nextLink.classList.add("text-secondary");
+            linksPaginacion.appendChild(nextLink);
+        }        
         
     } catch (error: any) {
         console.error('Error fetching Pokémon list:', error);

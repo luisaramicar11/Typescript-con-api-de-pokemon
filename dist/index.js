@@ -18,16 +18,18 @@ function index() {
         // Elementos DOM
         let card = document.querySelector(".card-container");
         let linksPaginacion = document.querySelector(".links-paginacion");
+        const div = document.createElement("div");
+        const img = document.createElement('img');
         let fragment = document.createDocumentFragment();
         let content = document.createElement('div');
         try {
             setTimeout(() => {
-                // Mostrar página de carga
-                card.innerHTML = `
-                <div class="w-100 d-flex justify-content-center align-items-center">
-                    <img class="loader" src="../assets/svg/loader.svg" alt="Cargando...">
-                </div>
-            `;
+                div.classList.add("w-100", "d-flex", "justify-content-center", "align-items-center");
+                img.src = "../assets/svg/pokeball.svg";
+                img.alt = "Cargando...";
+                img.classList.add("loader");
+                div.appendChild(img);
+                card.appendChild(div);
             }, 1);
             // Obtener datos de la API
             let response = yield fetch(pokemonApi);
@@ -80,11 +82,25 @@ function index() {
             }
             // Limpiar contenido anterior
             card.innerHTML = "";
+            // Agregar nuevo contenido
             card.appendChild(fragment);
+            // Limpiar enlaces de paginación anteriores
+            linksPaginacion.innerHTML = "";
             // Mostrar enlaces de paginación
-            let prevLink = data.previous ? `<a class="text-secondary" href="${data.previous}">⬅︎</a>` : "";
-            let nextLink = data.next ? `<a class="text-secondary" href="${data.next}">➡︎</a>` : "";
-            linksPaginacion.innerHTML = prevLink + " " + nextLink;
+            if (data.previous) {
+                const prevLink = document.createElement("a");
+                prevLink.textContent = "⬅︎";
+                prevLink.href = data.previous;
+                prevLink.classList.add("text-secondary");
+                linksPaginacion.appendChild(prevLink);
+            }
+            if (data.next) {
+                const nextLink = document.createElement("a");
+                nextLink.textContent = "➡︎";
+                nextLink.href = data.next;
+                nextLink.classList.add("text-secondary");
+                linksPaginacion.appendChild(nextLink);
+            }
         }
         catch (error) {
             console.error('Error fetching Pokémon list:', error);
