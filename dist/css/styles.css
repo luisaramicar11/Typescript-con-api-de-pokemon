@@ -74,7 +74,7 @@ a,p{
 
 .navbar ul li a {
     text-decoration: none;
-    color: #ffffffb3;
+    color: #ffffff99;
     font-size: 1em;
     font-weight: bold;
 }
@@ -83,6 +83,9 @@ a,p{
     background-color: #5eaebab3;
     font-size: 1.1rem;
     transform: scale(1.1);
+        & a{
+                color: #ffffff
+        }
 }
 
 /* ---------------------------------- Silhouettes styling as decoration for Header ---------------------------------- */
