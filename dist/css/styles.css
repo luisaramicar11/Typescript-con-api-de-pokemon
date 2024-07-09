@@ -72,7 +72,7 @@ a,p{
     margin-right: 0;
 }
 
-.navbar a {
+.navbar ul li a {
     text-decoration: none;
     color: #ffffffb3;
     font-size: 1em;
